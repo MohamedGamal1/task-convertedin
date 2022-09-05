@@ -54,9 +54,7 @@ class TaskRepository extends BaseRepository
     {
         return$this->model
                 ->leftJoin('users as user', 'tasks.assigned_to_id', '=', 'user.id')
-                ->select(DB::raw('count(assigned_to_id) as task_counts'))
-                ->addSelect('tasks.assigned_to_id')
-                ->addSelect('user.name')
+                ->select(DB::raw('count(assigned_to_id) as task_counts') ,'tasks.assigned_to_id','user.name')
                 ->groupBy('tasks.assigned_to_id')
                 ->groupBy('user.name')
                 ->orderByDesc('task_counts')
