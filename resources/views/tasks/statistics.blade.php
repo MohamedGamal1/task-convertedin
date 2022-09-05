@@ -32,8 +32,8 @@
             </tr>
             </thead>
             <tbody>
-            @if(!empty($data) && $data->count())
-                @foreach($data as $key => $value)
+            @if(!empty($statistics) && $statistics->count())
+                @foreach($statistics as $key => $value)
                     <tr>
                         <td>{{ $value->assigned_to_id }}</td>
                         <td>{{ $value->name}}</td>

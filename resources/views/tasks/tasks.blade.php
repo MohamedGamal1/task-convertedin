@@ -42,8 +42,8 @@
             </tr>
             </thead>
             <tbody>
-            @if(!empty($data) && $data->count())
-                @foreach($data as $key => $value)
+            @if(!empty($tasks) && $tasks->count())
+                @foreach($tasks as $key => $value)
                     <tr>
                         <td>{{ $value->title }}</td>
                         <td>{{ $value->description}}</td>
@@ -59,7 +59,7 @@
             </tbody>
         </table>
 
-        {!! $data->links() !!}
+        {!! $tasks->links() !!}
     </div>
 </x-app-layout>
 

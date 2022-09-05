@@ -22,50 +22,37 @@ class TaskRepository extends BaseRepository
 
     public function index()
     {
-        $data = DB::table('tasks')
+        return $this->model
             ->leftJoin('users', 'tasks.assigned_by_id', '=', 'users.id')
             ->leftJoin('users as userName', 'tasks.assigned_to_id', '=', 'userName.id')
-            ->select('tasks.title', 'tasks.description', 'users.name as admin_name','userName.name as user_name')
+            ->select('tasks.title', 'tasks.description', 'users.name as admin_name', 'userName.name as user_name')
             ->paginate(10);
-
-        return view('tasks.tasks', compact('data'));
     }
 
     public function create_task()
     {
-        $users = User::where('is_admin', 0)->get();
-        $admins = User::where('is_admin', 1)->get();
-        var_dump(count($admins));exit();
-        return view('tasks.createTask', compact('users', 'admins'));
+        $data = [];
+        $data['users'] = User::where('is_admin', 0)->get();
+        $data['admins'] = User::where('is_admin', 1)->get();
+        return $data;
+
     }
 
 
-    public function store_task(Request $request)
+    public function store_task($data)
     {
-        $request->validate([
-            'title' => ['required', 'string', 'min:2'],
-            'description' => ['required', 'string', 'min:5'],
-            'assigned_by_id' => ['required', 'int'],
-            'assigned_to_id' => ['required', 'int'],
+        return $this->model->create([
+            'title' => $data['title'],
+            'description' => $data['description'],
+            'assigned_by_id' => $data['assigned_by_id'],
+            'assigned_to_id' => $data['assigned_to_id'],
         ]);
-        try {
-            $user = $this->model->create([
-                'title' => $request->title,
-                'description' => $request->description,
-                'assigned_by_id' => $request->assigned_by_id,
-                'assigned_to_id' => $request->assigned_to_id,
-            ]);
-            if ($user)
-                return redirect('/tasks')->with('message', 'Task Assigned Successfully ');
-        } catch (Exception $e) {
-            return redirect()->back()->with('message', 'SomeThing Is Wrong');
-        }
 
     }
+
     public function statistics()
     {
-        try {
-            $data = DB::table('tasks')
+        return$this->model
                 ->leftJoin('users as user', 'tasks.assigned_to_id', '=', 'user.id')
                 ->select(DB::raw('count(assigned_to_id) as task_counts'))
                 ->addSelect('tasks.assigned_to_id')
@@ -75,20 +62,12 @@ class TaskRepository extends BaseRepository
                 ->orderByDesc('task_counts')
                 ->limit('10')
                 ->get();
-            return view('tasks.statistics', compact('data'));
-        } catch (Exception $e) {
-            return redirect()->back()->with('message', 'SomeThing Is Wrong');
-        }
-
-
     }
 
     function model(): string
     {
         return "App\Models\Task";
     }
-
-
 
 
 }

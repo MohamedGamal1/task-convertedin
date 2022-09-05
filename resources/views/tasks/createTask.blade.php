@@ -23,7 +23,7 @@
                         <div class="form-group">
                             <label for="assigned_by_id">Admins</label>
                                 <select class="block mt-1 w-full" name="assigned_by_id">
-                                    @foreach($admins as  $admin)
+                                    @foreach($data['admins'] as  $admin)
                                         <option value="{{$admin->id}}">
                                             {{$admin->name}}
                                         </option>
@@ -48,7 +48,7 @@
                         <div class="form-group">
                             <label for="assigned_to_id">Users</label>
                                 <select class="block mt-1 w-full" name="assigned_to_id">
-                                    @foreach($users as  $user)
+                                    @foreach($data['users'] as  $user)
                                         <option value="{{$user->id}}">
                                             {{$user->name}}
                                         </option>
